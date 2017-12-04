@@ -151,7 +151,7 @@ public class SQLDatabaseHandler extends SQLiteOpenHelper {
         List<Location> allLocations = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_LOCATIONS + " WHERE name LIKE " +
-                DatabaseUtils.sqlEscapeString(query + "%");
+                DatabaseUtils.sqlEscapeString("%" + query + "%");
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);

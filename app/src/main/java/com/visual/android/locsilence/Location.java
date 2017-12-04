@@ -6,9 +6,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by RamiK on 10/14/2017.
@@ -68,6 +66,7 @@ public class Location implements Parcelable{
         this.customProximity = parcel.readString();
     }
 
+
     @Override
     public void writeToParcel(Parcel parcel, int args){
         parcel.writeString(this.id);
@@ -85,6 +84,7 @@ public class Location implements Parcelable{
         parcel.writeInt(this.radius);
         parcel.writeString(this.customProximity);
     }
+
 
     public static final Creator<Location> CREATOR=new Creator<Location>(){
         @Override

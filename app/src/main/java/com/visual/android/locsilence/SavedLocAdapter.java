@@ -28,6 +28,7 @@ public class SavedLocAdapter extends ArrayAdapter<Location> {
         this.db = db;
     }
 
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -72,9 +73,11 @@ public class SavedLocAdapter extends ArrayAdapter<Location> {
         return convertView;
     }
 
+
     public Location getItem(int position) {
         return locations.get(position);
     }
+
 
     public void updateLocations(List<Location> locations) {
         this.locations.clear();

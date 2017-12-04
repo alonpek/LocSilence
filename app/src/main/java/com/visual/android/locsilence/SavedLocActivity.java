@@ -73,6 +73,7 @@ public class SavedLocActivity extends AppCompatActivity {
         });
     }
 
+
     // Return either a location object if 'place' already exists in db, else a new location object
     public Location getSelectedLocation(Place place, SQLDatabaseHandler db) {        // If place is in db already update location info in db
         Location selectedLocation = null;
@@ -94,12 +95,14 @@ public class SavedLocActivity extends AppCompatActivity {
         return selectedLocation;
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.activity_main_actions, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -113,6 +116,7 @@ public class SavedLocActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
     public void next_page(View v) {
         Intent intent = new Intent(this, MapsActivity.class);

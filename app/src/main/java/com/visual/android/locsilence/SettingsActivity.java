@@ -30,17 +30,11 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
-    /**
-     * A preference value change listener that updates the preference's summary
-     * to reflect its new value.
-     */
 
     private static Context context;
 
-    /**
-     * Helper method to determine if the device has an extra-large screen. For
-     * example, 10" tablets are extra-large.
-     */
+    //Helper method to determine if the device has an extra-large screen. For
+    //example, 10" tablets are extra-large.
     private static boolean isXLargeTablet(Context context) {
         return (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
@@ -50,9 +44,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //getSupportActionBar().setTitle("Settings");
-
         setupActionBar();
         getSupportActionBar().setTitle("Settings");
 
@@ -61,7 +52,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         //Sets preferences in pref_headers as default settings
         getFragmentManager().beginTransaction().replace(android.R.id.content,
                 new PrefsFragment()).commit();
-
     }
 
   
@@ -104,6 +94,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         }
 
+
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
@@ -116,21 +107,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
 
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
+    //Set up the {@link android.app.ActionBar}, if the API is available.
     private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-
-        if (actionBar != null) {
-            // Show the Up button in the action bar.
-            actionBar.setDisplayHomeAsUpEnabled(true);
-
-        }
-
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -143,27 +125,21 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public boolean onIsMultiPane() {
         return isXLargeTablet(this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target) {
         //loadHeadersFromResource(R.xml.pref_headers, target);
     }
 
-    /**
-     * This method stops fragment injection in malicious applications.
-     * Make sure to deny any unknown fragments here.
-     */
+     // This method stops fragment injection in malicious applications.
+     // Make sure to deny any unknown fragments here.
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName);
     }

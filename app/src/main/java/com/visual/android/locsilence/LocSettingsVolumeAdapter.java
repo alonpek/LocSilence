@@ -28,6 +28,7 @@ public class LocSettingsVolumeAdapter extends ArrayAdapter<String> {
         this.volumeLevels = defaultVolumes;
     }
 
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(getContext());

@@ -12,7 +12,6 @@ import android.util.Log;
 
 public abstract class RetrieveLocation extends AsyncTask<LocationManager, Void, android.location.Location> {
 
-
     @Override
     protected android.location.Location doInBackground(LocationManager... locationManagers) {
         Log.i("THREAD", "DO IN BACKGROUND");
@@ -35,8 +34,6 @@ public abstract class RetrieveLocation extends AsyncTask<LocationManager, Void, 
         } else {
             Utility.firstRecursiveExecution = false;
         }
-
-
         return location;
     }
 }

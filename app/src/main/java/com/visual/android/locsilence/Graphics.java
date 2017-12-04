@@ -21,24 +21,26 @@ import java.util.List;
 public class Graphics extends AppCompatActivity {
     public static boolean setRadius = false;
     private static double PI = 3.14159265;
+
     //On Start drawing the circles for stored locations
     public SQLDatabaseHandler startDraw(GoogleMap map, SQLDatabaseHandler handler) {
         List<Location> allLocations = handler.getAllLocations();
         //iterates through database and draws the circles
         for (Location location : allLocations) {
             LatLng center = new LatLng(location.getLat(), location.getLng());
-            if(location.getRadius() < 1){
-                Log.e("GSON","The Gson is the problem");
-                perimDraw(map,JsonUtils.customProxToList(location.getCustomProximity()));
-            }
-            else {
-                CircleOptions opt = new CircleOptions().center(center).radius(location.getRadius()).strokeColor(Color.BLACK).fillColor(0x88FF6800).clickable(true);
+            if (location.getRadius() < 1) {
+                Log.e("GSON", "The Gson is the problem");
+                perimDraw(map, JsonUtils.customProxToList(location.getCustomProximity()));
+            } else {
+                CircleOptions opt = new CircleOptions().center(center).radius(location.getRadius())
+                        .strokeColor(Color.BLACK).fillColor(0x88FF6800).clickable(true);
                 final Circle circle = map.addCircle(opt);
                 map.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
                     @Override
                     public void onCircleClick(Circle circle) {
                         setRadius = true;
-                        Log.e("circle clicked", "Circle " + circle.getId() + " was clicked");
+                        Log.e("circle clicked", "Circle " + circle.getId() +
+                                " was clicked");
                     }
                 });
                 location.setCircleId(circle.getId());
@@ -56,32 +58,32 @@ public class Graphics extends AppCompatActivity {
         setRadius = false;
     }
 
-    public static boolean customInLocation(Location current , LatLng cur){
+
+    public static boolean customInLocation(Location current, LatLng cur) {
         ArrayList<LatLng> intermediary = JsonUtils.customProxToList(current.getCustomProximity());
         double target = 360;
         double latmax = intermediary.get(0).latitude;
         double lngmax = intermediary.get(0).longitude;
         double latmin = intermediary.get(0).latitude;
         double lngmin = intermediary.get(0).longitude;
-        boolean decision = true;
-        for(int x =1; x<intermediary.size();x++){
-            if(intermediary.get(x).longitude > lngmax){
-                lngmax=intermediary.get(x).longitude;
+        //boolean decision = true;
+        for (int x = 1; x < intermediary.size(); x++) {
+            if (intermediary.get(x).longitude > lngmax) {
+                lngmax = intermediary.get(x).longitude;
             }
-            if(intermediary.get(x).longitude < lngmin){
-                lngmin=intermediary.get(x).longitude;
+            if (intermediary.get(x).longitude < lngmin) {
+                lngmin = intermediary.get(x).longitude;
             }
-            if(intermediary.get(x).latitude > latmax){
-                latmax=intermediary.get(x).latitude;
+            if (intermediary.get(x).latitude > latmax) {
+                latmax = intermediary.get(x).latitude;
             }
-            if(intermediary.get(x).latitude < latmin){
-                latmin=intermediary.get(x).latitude;
+            if (intermediary.get(x).latitude < latmin) {
+                latmin = intermediary.get(x).latitude;
             }
         }
 
-        if(cur.latitude > latmax || cur.latitude < latmin || cur.longitude > lngmax || cur.longitude < lngmin ){
-            return false;
-        }
+        return !(cur.latitude > latmax || cur.latitude < latmin || cur.longitude > lngmax || cur
+                .longitude < lngmin);
        /* else {
             double angletotal = 0;
             for (int x = 0; x < intermediary.size(); x++) {
@@ -100,7 +102,6 @@ public class Graphics extends AppCompatActivity {
                 decision = true;
             }
         }*/
-        return decision;
     }
 
     public void pointDraw(GoogleMap map, LatLng center) {
@@ -116,6 +117,7 @@ public class Graphics extends AppCompatActivity {
         map.clear();
         final Polygon polygon = map.addPolygon(polygonOptions);
     }
+
     public static void perimDraw(GoogleMap map, ArrayList<LatLng> points) {
         PolygonOptions polygonOptions = new PolygonOptions().strokeColor(Color.BLACK).fillColor(0x88FF6800);
         for (LatLng point : points) {
