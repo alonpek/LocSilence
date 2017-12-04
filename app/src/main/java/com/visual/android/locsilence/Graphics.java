@@ -63,7 +63,7 @@ public class Graphics extends AppCompatActivity {
         double lngmax = intermediary.get(0).longitude;
         double latmin = intermediary.get(0).latitude;
         double lngmin = intermediary.get(0).longitude;
-        boolean decision = false;
+        boolean decision = true;
         for(int x =1; x<intermediary.size();x++){
             if(intermediary.get(x).longitude > lngmax){
                 lngmax=intermediary.get(x).longitude;
@@ -80,9 +80,9 @@ public class Graphics extends AppCompatActivity {
         }
 
         if(cur.latitude > latmax || cur.latitude < latmin || cur.longitude > lngmax || cur.longitude < lngmin ){
-            return decision;
+            return false;
         }
-        else {
+       /* else {
             double angletotal = 0;
             for (int x = 0; x < intermediary.size(); x++) {
                 LatLng tmp = intermediary.get(x);
@@ -99,7 +99,7 @@ public class Graphics extends AppCompatActivity {
             if (angletotal == target) {
                 decision = true;
             }
-        }
+        }*/
         return decision;
     }
 
