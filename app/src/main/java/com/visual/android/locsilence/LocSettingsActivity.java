@@ -45,7 +45,6 @@ public class LocSettingsActivity extends AppCompatActivity {
         mToolbar.setSubtitle("LocSilence");
         if (!selectedLocation.getCustomProximity().equals(Constants.JSON_NULL)) {
             mCustomProximity.setChecked(true);
-            selectedLocation.setRadius(-1);
         }
 
 

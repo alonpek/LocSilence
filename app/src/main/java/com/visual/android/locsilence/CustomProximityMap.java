@@ -104,6 +104,7 @@ public class CustomProximityMap extends AppCompatActivity implements OnMapReadyC
                 else {
                     String customProximityJSON = new Gson().toJson(boundary);
                     selectedLocation.setCustomProximity(customProximityJSON);
+                    selectedLocation.setRadius(-1);
                     Intent customSettingsIntent = new Intent(CustomProximityMap.this, LocSettingsActivity.class);
                     customSettingsIntent.putExtra("selectedLocation", selectedLocation);
                     startActivity(customSettingsIntent);
