@@ -26,7 +26,7 @@ public class Graphics extends AppCompatActivity {
         //iterates through database and draws the circles
         for (Location location : allLocations) {
             LatLng center = new LatLng(location.getLat(), location.getLng());
-            if(location.getRadius()<1){
+            if(location.getRadius() == 1){
                 Log.e("GSON","The Gson is the problem");
                 perimDraw(map,JsonUtils.customProxToList(location.getCustomProximity()));
             }
