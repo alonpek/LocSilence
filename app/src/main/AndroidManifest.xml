@@ -58,7 +58,7 @@
             android:theme="@style/AppTheme.Settings"
             />
         <activity android:name=".CustomProximityMap" />
-        <activity android:name=".settingsHelpActivity"></activity>
+        <activity android:name=".SettingsHelpActivity"></activity>
     </application>
 
 </manifest>

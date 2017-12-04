@@ -20,6 +20,27 @@
     <string name="volumeTitle">Volume Title</string>
     <string name="or">or</string>
     <string name="proximity">Proximity</string>
+
+    <!-- Strings related to Help Activity -->
+    <string name="help_intro">LocSilence is an application for automatic location based volume altering.</string>
+    <string name="step_1">Step 1: </string>
+    <string name="step_1_title">Add a location!</string>
+    <string name="step_1_instructions">\u2022 Press the \'+\' button on the main page, and search for the preferred location</string>
+
+    <string name="step_2">Step 2: </string>
+    <string name="step_2_title">Specify the context!</string>
+    <string name="step_2_instructions_1">\u2022 Input what you want each volumeType to be swapped to when you\'re in the location</string>
+    <string name="step_2_instructions_2">\u2022 You may also expand the location\'s radius to better accommodate your needs, or choose a custom boundary</string>
+    <string name="step_2_instructions_3">\u2022 Officially set the location by pressing the set button</string>
+
+    <string name="step_3">Step 3: </string>
+    <string name="step_3_title">Edit a location!</string>
+    <string name="step_3_instructions_1">\u2022 From the home screen press the \'locations\' button to see a list of your set locations</string>
+    <string name="step_3_instructions_2">\u2022 Use the search bar, or manually find your location to edit or delete any location</string>
+
+    <string name="note">Note: </string>
+    <string name="note_instructions">LocSilence is only as accurate as google maps and the phone gps. LocSilence determines location based on the accuracy of these technologies and attempts to adjust the algorithm for determining if you are in a set location accordingly.</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

@@ -19,7 +19,7 @@
 
     <Preference
         android:key="help"
-        android:title="help" >
+        android:title="Help" >
     </Preference>
 
 

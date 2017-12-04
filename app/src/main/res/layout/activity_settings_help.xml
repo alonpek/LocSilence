@@ -6,12 +6,11 @@
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    tools:context="com.visual.android.locsilence.settingsHelpActivity">
-    >
+    tools:context="com.visual.android.locsilence.SettingsHelpActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/locSilence_summary"
@@ -19,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="15dp"
-            android:text="Locsilence is an application for automatic location based volume altering." />
+            android:text="@string/help_intro"/>
 
         <TextView
             android:id="@+id/Step1"
@@ -29,7 +28,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/locSilence_summary"
-            android:text="Step 1: " />
+            android:text="@string/step_1" />
 
         <TextView
             android:id="@+id/Step1_title"
@@ -39,7 +38,7 @@
             android:layout_alignBottom="@+id/Step1"
             android:layout_toEndOf="@+id/Step1"
             android:layout_toRightOf="@+id/Step1"
-            android:text="Add a location! " />
+            android:text="@string/step_1_title" />
 
         <TextView
             android:id="@+id/Step1_part1"
@@ -50,7 +49,7 @@
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/Step1"
             android:layout_toRightOf="@+id/Step1"
-            android:text="\u2022 Press the '+' button on the main page, and search for the preferred location " />
+            android:text="@string/step_1_instructions" />
 
         <TextView
             android:id="@+id/Step2"
@@ -61,7 +60,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/Step1_part1"
             android:layout_marginTop="15dp"
-            android:text="Step 2: " />
+            android:text="@string/step_2" />
 
         <TextView
             android:id="@+id/Step2_title"
@@ -71,7 +70,7 @@
             android:layout_alignBottom="@+id/Step2"
             android:layout_toEndOf="@+id/Step2"
             android:layout_toRightOf="@+id/Step2"
-            android:text="Specify the context! " />
+            android:text="@string/step_2_title" />
 
         <TextView
             android:id="@+id/Step2_part1"
@@ -82,7 +81,7 @@
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/Step2"
             android:layout_toRightOf="@+id/Step2"
-            android:text="\u2022 Input what you want each volumeType to be swapped to when you're in the location " />
+            android:text="@string/step_2_instructions_1" />
 
         <TextView
             android:id="@+id/Step2_part2"
@@ -95,8 +94,7 @@
             android:layout_alignStart="@+id/Step2_part1"
             android:layout_below="@+id/Step2_part1"
             android:layout_marginTop="5dp"
-            android:text="\u2022 You may also expand the location's radius to better accomodate your needs, or choose a custom boundary " />
-
+            android:text="@string/step_2_instructions_2"/>
         <TextView
             android:id="@+id/Step2_part3"
             style="@style/Text2"
@@ -108,8 +106,7 @@
             android:layout_alignStart="@+id/Step2_part2"
             android:layout_below="@+id/Step2_part2"
             android:layout_marginTop="5dp"
-            android:text="\u2022 Officially set the location by pressing the set button " />
-
+            android:text="@string/step_2_instructions_3"/>
         <TextView
             android:id="@+id/Step3"
             style="@style/Header2"
@@ -119,7 +116,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/Step2_part3"
             android:layout_marginTop="15dp"
-            android:text="Step 3: " />
+            android:text="@string/step_3" />
 
         <TextView
             android:id="@+id/Step3_title"
@@ -129,7 +126,7 @@
             android:layout_alignBottom="@+id/Step3"
             android:layout_toEndOf="@+id/Step3"
             android:layout_toRightOf="@+id/Step3"
-            android:text="Edit a location! " />
+            android:text="@string/step_3_title" />
 
         <TextView
             android:id="@+id/Step3_part1"
@@ -140,7 +137,7 @@
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/Step3"
             android:layout_toRightOf="@+id/Step3"
-            android:text="\u2022 From the home screen press the 'locations' button to see a list of your set locations " />
+            android:text="@string/step_3_instructions_1"/>
 
         <TextView
             android:id="@+id/Step3_part2"
@@ -153,7 +150,7 @@
             android:layout_alignStart="@+id/Step3_part1"
             android:layout_below="@+id/Step3_part1"
             android:layout_marginTop="5dp"
-            android:text="\u2022 Use the searchbar, or manually find your location to edit or delete any location " />
+            android:text="@string/step_3_instructions_2"/>
 
         <TextView
             android:id="@+id/Note"
@@ -164,7 +161,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/Step3_part2"
             android:layout_marginTop="20dp"
-            android:text="Note: " />
+            android:text="@string/note" />
 
         <TextView
             android:id="@+id/Note_body"
@@ -174,8 +171,7 @@
             android:layout_alignTop="@+id/Note"
             android:layout_toEndOf="@+id/Note"
             android:layout_toRightOf="@+id/Note"
-            android:text="LocSilence is only as accurate as google maps and the phone gps. LocSilence determines location based on the accuracy of these technologies and attempts to adjust the algorithm for determining if you are in a set location accordingly." />
-
+            android:text="@string/note_instructions"/>
 
     </RelativeLayout>
 </ScrollView>

@@ -246,9 +246,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         List<Location> locations = db.getAllLocations();
 
         for (Location Savedlocation : locations) {
-            System.out.println("marker maker hit");
-            System.out.println("current lat: " + Savedlocation.getLat());
-            System.out.println("current lng: " + Savedlocation.getLng());
+            Log.i("Marker Maker", "Hit");
+            Log.i("Current Lat", Double.toString(Savedlocation.getLat()));
+            Log.i("Current Long", Double.toString(Savedlocation.getLng()));
             LatLng loc = new LatLng(Savedlocation.getLat(), Savedlocation.getLng());
             mMap.addMarker(new MarkerOptions().position(loc).title(Savedlocation.getName()));
         }

@@ -56,7 +56,7 @@ public class SQLDatabaseHandler extends SQLiteOpenHelper {
                 + KEY_CREATED_AT + " DATETIME," + KEY_UPDATED_AT + " DATETIME," +
                 KEY_VOL + " VARCHAR(255)," + KEY_CID + " VARCHAR(255)," +
                 KEY_RAD + " TINY(255)," + KEY_CUST_PROX + " VARCHAR(255))";
-        System.out.println(CREATE_CONTACTS_TABLE);
+        Log.i("Table", CREATE_CONTACTS_TABLE);
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
 

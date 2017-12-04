@@ -20,13 +20,13 @@ public class JsonUtils {
     private static final String TAG = CustomProximityMap.class.getSimpleName();
 
     public static ArrayList<LatLng> customProxToList(String customProximityJson){
-        Log.i("plz", customProximityJson);
+        Log.i("Custom Prox JSON", customProximityJson);
         if(customProximityJson == null)
             return null;
         try{
             Type listType = new TypeToken<ArrayList<LatLng>>() {}.getType();
             ArrayList<LatLng> boundary = new Gson().fromJson(customProximityJson, listType);
-            Log.i("plz", " "+boundary.size());
+            Log.i("Boundary Size", " "+boundary.size());
             return boundary;
         }
         catch(JsonParseException e){

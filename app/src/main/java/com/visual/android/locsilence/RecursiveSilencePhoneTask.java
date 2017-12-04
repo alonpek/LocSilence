@@ -132,7 +132,7 @@ public class RecursiveSilencePhoneTask extends RetrieveLocation {
                         Log.i("User", "removing notification");
                         removeNotification();
                     } else {
-                        System.out.println("SEND DEACTIVATION NOTIFICATION");
+                        Log.i("SENDING", "DEACTIVATION NOTIFICATION");
                         sendNotification("deactivated", "", false);
                     }
                     recentlySilenced = false;
@@ -187,10 +187,10 @@ public class RecursiveSilencePhoneTask extends RetrieveLocation {
     }
 
     private void modifyPhoneVolume(List<Integer> streamTypes, List<Integer> volumeLevels) {
-        System.out.println("MODIFYING VOLUME");
+        Log.i("VOLUME", "MODIFIED");
         for (int i = 0; i < streamTypes.size(); i++) {
             if (volumeLevels.get(i) != -1) {
-                System.out.println(audio.getStreamVolume(streamTypes.get(i)));
+                Log.i("CURRENT VOL", Integer.toString(audio.getStreamVolume(streamTypes.get(i))));
                 savedVolumes.add(audio.getStreamVolume(streamTypes.get(i)));
                 audio.setStreamVolume(streamTypes.get(i), volumeLevels.get(i), 0);
             } else {
@@ -200,16 +200,17 @@ public class RecursiveSilencePhoneTask extends RetrieveLocation {
     }
 
     private void revertPhoneVolume(List<Integer> streamTypes) {
-        System.out.println("REVERT PHONE VOLUME!!!!");
+        Log.i("Volume", "Reverted");
         List<Integer> volumeLevels = new ArrayList<>();
         if (currentlySilencedLocation != null) {
             volumeLevels = JsonUtils.volumeLevelsToList(currentlySilencedLocation.getVolumes());
         }
         for (int i = 0; i < streamTypes.size(); i++) {
-            System.out.println(i + " streamType: " + streamTypes.get(i) + ", audio: " + audio.getStreamVolume(streamTypes.get(i)));
+            Log.i("Stream Type", Integer.toString(streamTypes.get(i)));
+            Log.i("Audio", Integer.toString(audio.getStreamVolume(streamTypes.get(i))));
             if (savedVolumes.size() > 0 && savedVolumes.get(i) != -1 && i < volumeLevels.size() &&
                     volumeLevels.get(i) == audio.getStreamVolume(streamTypes.get(i))) {
-                System.out.println("savedVolume: " + savedVolumes.get(i));
+                Log.i("Saved Volume ", Integer.toString(savedVolumes.get(i)));
                 audio.setStreamVolume(streamTypes.get(i), savedVolumes.get(i), 0);
             }
         }

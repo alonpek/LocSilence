@@ -13,6 +13,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.List;
@@ -94,8 +95,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             mPrefHelp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    System.out.println("help preference hit");
-                    Intent helpIntent = new Intent(context, settingsHelpActivity.class);
+                    Log.i("Help Preference", "Hit");
+                    Intent helpIntent = new Intent(context, SettingsHelpActivity.class);
                     startActivity(helpIntent);
                     return true;
                 }
