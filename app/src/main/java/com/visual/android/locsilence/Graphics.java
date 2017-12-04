@@ -27,6 +27,7 @@ public class Graphics extends AppCompatActivity {
         for (Location location : allLocations) {
             LatLng center = new LatLng(location.getLat(), location.getLng());
             if(location.getRadius()<1){
+                Log.e("GSON","The Gson is the problem");
                 perimDraw(map,JsonUtils.customProxToList(location.getCustomProximity()));
             }
             else {
