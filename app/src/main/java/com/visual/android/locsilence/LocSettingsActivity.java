@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,6 +23,7 @@ public class LocSettingsActivity extends AppCompatActivity {
     private static final String TAG = LocSettingsActivity.class.getSimpleName();
     private String[] volumeTypes = {"Ringtone", "Notifications", "Alarms"};
     private Location selectedLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,6 @@ public class LocSettingsActivity extends AppCompatActivity {
             mCustomProximity.setChecked(true);
         }
 
-
         // Create and set custom adapter of different volume type settings
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         final LocSettingsVolumeAdapter locSettingsVolumeAdapter = new LocSettingsVolumeAdapter(this, volumeTypes,
@@ -56,12 +55,10 @@ public class LocSettingsActivity extends AppCompatActivity {
         ListView settingsListView = (ListView) findViewById(R.id.settings_listview);
         settingsListView.setAdapter(locSettingsVolumeAdapter);
 
-
         // Init Listeners
         mGeneralProximity.addTextChangedListener(new TextWatcher() {
             // editingText flag used for preventing infinite recursive loop
             boolean editingText = false;
-
             public void afterTextChanged(Editable s) {
                 String proximityString = mGeneralProximity.getText().toString();
                 if (!proximityString.equals("") && editingText == false) {
@@ -77,7 +74,6 @@ public class LocSettingsActivity extends AppCompatActivity {
                     editingText = false;
                 }
             }
-
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 //TODO: Auto-generated stub
             }
@@ -106,7 +102,6 @@ public class LocSettingsActivity extends AppCompatActivity {
                 }
             }
         });
-
 
         mSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
