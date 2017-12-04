@@ -20,24 +20,27 @@ import java.util.List;
 
 public class Graphics extends AppCompatActivity {
     public static boolean setRadius = false;
-
     //On Start drawing the circles for stored locations
     public SQLDatabaseHandler startDraw(GoogleMap map, SQLDatabaseHandler handler) {
         List<Location> allLocations = handler.getAllLocations();
         //iterates through database and draws the circles
         for (Location location : allLocations) {
             LatLng center = new LatLng(location.getLat(), location.getLng());
-
-            CircleOptions opt = new CircleOptions().center(center).radius(location.getRadius()).strokeColor(Color.BLACK).fillColor(0x88FF6800).clickable(true);
-            final Circle circle = map.addCircle(opt);
-            map.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
-                @Override
-                public void onCircleClick(Circle circle) {
-                    setRadius = true;
-                    Log.e("circle clicked", "Circle " + circle.getId() + " was clicked");
-                }
-            });
-            location.setCircleId(circle.getId());
+            if(location.getRadius()<1){
+                perimeterDraw(map,JsonUtils.customProxToList(location.getCustomProximity()));
+            }
+            else {
+                CircleOptions opt = new CircleOptions().center(center).radius(location.getRadius()).strokeColor(Color.BLACK).fillColor(0x88FF6800).clickable(true);
+                final Circle circle = map.addCircle(opt);
+                map.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
+                    @Override
+                    public void onCircleClick(Circle circle) {
+                        setRadius = true;
+                        Log.e("circle clicked", "Circle " + circle.getId() + " was clicked");
+                    }
+                });
+                location.setCircleId(circle.getId());
+            }
             handler.updateLocalGame(location);
         }
         return handler;
@@ -51,13 +54,59 @@ public class Graphics extends AppCompatActivity {
         setRadius = false;
     }
 
+    public static boolean customInLocation(Location current , LatLng cur){
+        ArrayList<LatLng> intermediary = JsonUtils.customProxToList(current.getCustomProximity());
+        double target = 180 * (intermediary.size() - 2);
+        double latmax = intermediary.get(0).latitude;
+        double lngmax = intermediary.get(0).longitude;
+        double latmin = intermediary.get(0).latitude;
+        double lngmin = intermediary.get(0).longitude;
+        boolean decision = false;
+        for(int x =1; x<intermediary.size();x++){
+            if(intermediary.get(x).longitude > lngmax){
+                lngmax=intermediary.get(x).longitude;
+            }
+            if(intermediary.get(x).longitude < lngmin){
+                lngmin=intermediary.get(x).longitude;
+            }
+            if(intermediary.get(x).latitude > latmax){
+                latmax=intermediary.get(x).latitude;
+            }
+            if(intermediary.get(x).latitude < latmin){
+                latmin=intermediary.get(x).latitude;
+            }
+        }
+
+        if(cur.latitude > latmax || cur.latitude < latmin || cur.longitude > lngmax || cur.longitude < lngmin ){
+            return decision;
+        }
+        else {
+            double angletotal = 0;
+            for (int x = 0; x < intermediary.size(); x++) {
+                LatLng tmp = intermediary.get(x);
+                if (x == intermediary.size() - 1) {
+                    LatLng tmp2 = intermediary.get(0);
+                    angletotal += ((Math.atan2((tmp.longitude - cur.longitude), (tmp.latitude - cur.latitude))) -
+                            (Math.atan2((tmp2.longitude - cur.longitude), (tmp2.latitude - cur.latitude))) + 360) % 360;
+                } else {
+                    LatLng tmp2 = intermediary.get(x + 1);
+                    angletotal += ((Math.atan2((tmp.longitude - cur.longitude), (tmp.latitude - cur.latitude))) -
+                            (Math.atan2((tmp2.longitude - cur.longitude), (tmp2.latitude - cur.latitude))) + 360) % 360;
+                }
+            }
+            if (angletotal == target) {
+                decision = true;
+            }
+        }
+        return decision;
+    }
+
     public void pointDraw(GoogleMap map, LatLng center) {
         CircleOptions circleOptions = new CircleOptions().center(center).radius(15).strokeColor(Color.BLACK).fillColor(Color.BLACK);
         final Circle circle = map.addCircle(circleOptions);
     }
 
-    //Perimeter outlining (Work in Progress) LatLngBounds promising to help
-    public void perimeterDraw(GoogleMap map, ArrayList<LatLng> points) {
+    public static void perimeterDraw(GoogleMap map, ArrayList<LatLng> points) {
         PolygonOptions polygonOptions = new PolygonOptions().strokeColor(Color.BLACK).fillColor(0x88FF6800);
         for (LatLng point : points) {
             polygonOptions.add(point);

@@ -11,6 +11,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -88,32 +90,53 @@ public class RecursiveSilencePhoneTask extends RetrieveLocation {
                 Log.i("Current accuracy", Double.toString(currentAccuracy));
                 double lat = location.getLat();
                 double lng = location.getLng();
-                android.location.Location.distanceBetween(lat, lng, currentLat, currentLon, results);
 
-                // The computed distance is stored in results[0].
-                // If results has length 2 or greater, the initial bearing is stored in results[1].
-                // If results has length 3 or greater, the final bearing is stored in results[2]
-                Log.i("Current distance", Float.toString(results[0]));
-
-                if (results[0] < radius + currentAccuracy) {
-                    Log.i("User", "In Circle!");
-                    try {
-                        //audio.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                        if (!recentlySilenced) {
-                            Log.i("Silencing", "Activated");
-                            currentlySilencedLocation = location;
-                            modifyPhoneVolume(streamTypes, JsonUtils.volumeLevelsToList(location.getVolumes()));
-                            sendNotification("activated", location.getName(), true);
+                if (radius == -1) {
+                    if (Graphics.customInLocation(location, new LatLng(currentLat, currentLon)) == true) {
+                        Log.i("User", "In Circle!");
+                        try {
+                            //audio.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                            if (!recentlySilenced) {
+                                Log.i("Silencing", "Activated");
+                                currentlySilencedLocation = location;
+                                modifyPhoneVolume(streamTypes, JsonUtils.volumeLevelsToList(location.getVolumes()));
+                                sendNotification("activated", location.getName(), true);
+                            }
+                            recentlySilenced = true;
+                        } catch (SecurityException e) {
+                            e.printStackTrace();
                         }
-                        recentlySilenced = true;
-                    } catch (SecurityException e) {
-                        e.printStackTrace();
+                        flag = true;
+                        break;
                     }
-                    flag = true;
-                    break;
                 } else {
-                    Log.i("User", "Not In Circle!");
-                    removeNotification();
+                    android.location.Location.distanceBetween(lat, lng, currentLat, currentLon, results);
+
+                    // The computed distance is stored in results[0].
+                    // If results has length 2 or greater, the initial bearing is stored in results[1].
+                    // If results has length 3 or greater, the final bearing is stored in results[2]
+                    Log.i("Current distance", Float.toString(results[0]));
+
+                    if (results[0] < radius + currentAccuracy) {
+                        Log.i("User", "In Circle!");
+                        try {
+                            //audio.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                            if (!recentlySilenced) {
+                                Log.i("Silencing", "Activated");
+                                currentlySilencedLocation = location;
+                                modifyPhoneVolume(streamTypes, JsonUtils.volumeLevelsToList(location.getVolumes()));
+                                sendNotification("activated", location.getName(), true);
+                            }
+                            recentlySilenced = true;
+                        } catch (SecurityException e) {
+                            e.printStackTrace();
+                        }
+                        flag = true;
+                        break;
+                    } else {
+                        Log.i("User", "Not In Circle!");
+                        removeNotification();
+                    }
                 }
             }
         } else {

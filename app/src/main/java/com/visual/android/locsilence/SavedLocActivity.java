@@ -74,8 +74,7 @@ public class SavedLocActivity extends AppCompatActivity {
     }
 
     // Return either a location object if 'place' already exists in db, else a new location object
-    public Location getSelectedLocation(Place place, SQLDatabaseHandler db) {
-        // If place is in db already update location info in db
+    public Location getSelectedLocation(Place place, SQLDatabaseHandler db) {        // If place is in db already update location info in db
         Location selectedLocation = null;
         if (db.locationInDB(place.getId())) {
             selectedLocation = db.getLocation(place.getId());
