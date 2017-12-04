@@ -27,7 +27,7 @@ public class Graphics extends AppCompatActivity {
         for (Location location : allLocations) {
             LatLng center = new LatLng(location.getLat(), location.getLng());
             if(location.getRadius()<1){
-                perimeterDraw(map,JsonUtils.customProxToList(location.getCustomProximity()));
+                perimDraw(map,JsonUtils.customProxToList(location.getCustomProximity()));
             }
             else {
                 CircleOptions opt = new CircleOptions().center(center).radius(location.getRadius()).strokeColor(Color.BLACK).fillColor(0x88FF6800).clickable(true);
@@ -106,12 +106,19 @@ public class Graphics extends AppCompatActivity {
         final Circle circle = map.addCircle(circleOptions);
     }
 
-    public static void perimeterDraw(GoogleMap map, ArrayList<LatLng> points) {
+    public void perimeterDraw(GoogleMap map, ArrayList<LatLng> points) {
         PolygonOptions polygonOptions = new PolygonOptions().strokeColor(Color.BLACK).fillColor(0x88FF6800);
         for (LatLng point : points) {
             polygonOptions.add(point);
         }
         map.clear();
+        final Polygon polygon = map.addPolygon(polygonOptions);
+    }
+    public static void perimDraw(GoogleMap map, ArrayList<LatLng> points) {
+        PolygonOptions polygonOptions = new PolygonOptions().strokeColor(Color.BLACK).fillColor(0x88FF6800);
+        for (LatLng point : points) {
+            polygonOptions.add(point);
+        }
         final Polygon polygon = map.addPolygon(polygonOptions);
     }
 }
