@@ -115,7 +115,7 @@ public class LocSettingsActivity extends AppCompatActivity {
                 selectedLocation.setVolumes(new Gson().toJson(volumeLevels));
                 if (mCustomProximity.isChecked()) {
                     // temporary value until we fix the radius/customProx in the recursive task and can set it to -1
-                    selectedLocation.setRadius(1);
+                    selectedLocation.setRadius(-1);
                 } else if ((mGeneralProximity.getText().toString()).equals("")) {
                     selectedLocation.setRadius(Constants.DEFAULT_RADIUS);
                 } else {
