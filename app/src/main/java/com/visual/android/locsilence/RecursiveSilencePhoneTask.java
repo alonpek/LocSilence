@@ -211,8 +211,8 @@ public class RecursiveSilencePhoneTask extends RetrieveLocation {
         Log.i("VOLUME", "MODIFIED");
         for (int i = 0; i < streamTypes.size(); i++) {
             if (volumeLevels.get(i) != -1) {
-                Log.i("CURRENT VOL", Integer.toString(audio.getStreamVolume(streamTypes
-                        .get(i))));
+
+                Log.i("CURRENT VOL", Integer.toString(audio.getStreamVolume(streamTypes.get(i))));
                 savedVolumes.add(audio.getStreamVolume(streamTypes.get(i)));
                 audio.setStreamVolume(streamTypes.get(i), volumeLevels.get(i), 0);
             } else {
