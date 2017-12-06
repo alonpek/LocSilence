@@ -61,8 +61,8 @@ public class CustomProximityMap extends AppCompatActivity implements OnMapReadyC
                                 Manifest.permission.ACCESS_FINE_LOCATION)
                                 == PackageManager.PERMISSION_GRANTED) {
                             if (mMap != null) {
-                                mMap.setMyLocationEnabled(true);
-                                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                                //mMap.setMyLocationEnabled(true);
+                                //mMap.getUiSettings().setMyLocationButtonEnabled(false);
                             }
                         }
                     }
@@ -136,7 +136,7 @@ public class CustomProximityMap extends AppCompatActivity implements OnMapReadyC
                     == PackageManager.PERMISSION_GRANTED) {
                 if (mMap != null) {
                     mMap.setMyLocationEnabled(true);
-                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
                     mMap.getUiSettings().setCompassEnabled(true);
                 }
             }
