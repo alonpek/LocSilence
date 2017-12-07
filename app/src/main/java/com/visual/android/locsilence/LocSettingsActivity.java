@@ -46,6 +46,9 @@ public class LocSettingsActivity extends AppCompatActivity {
         if (!selectedLocation.getCustomProximity().equals(Constants.JSON_NULL)) {
             mCustomProximity.setChecked(true);
         }
+        else if(selectedLocation.getRadius() != -1){
+            mGeneralProximity.setText(Integer.toString(selectedLocation.getRadius()));
+        }
 
         // Create and set custom adapter of different volume type settings
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -85,12 +88,15 @@ public class LocSettingsActivity extends AppCompatActivity {
             }
         });
 
+
         mCustomProximity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectedLocation.setCustomProximity(new Gson().toJson(null));
                 if (mCustomProximity.isChecked()) {
                     mGeneralProximity.setText("");
+                    List<Integer> volumeLevels = locSettingsVolumeAdapter.getVolumeLevels();
+                    selectedLocation.setVolumes(new Gson().toJson(volumeLevels));
                     Intent customProxIntent = new Intent(LocSettingsActivity.this, CustomProximityMap.class);
                     customProxIntent.putExtra("selectedLocation", selectedLocation);
                     startActivity(customProxIntent);
