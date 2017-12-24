@@ -103,8 +103,7 @@ public class CustomProximityMap extends AppCompatActivity implements OnMapReadyC
                     Utility.alertToast(CustomProximityMap.this, "Need to set at least 3 points");
                 }
                 else {
-                    String customProximityJSON = new Gson().toJson(boundary);
-                    selectedLocation.setCustomProximity(customProximityJSON);
+                    selectedLocation.setCustomProximity(boundary);
                     selectedLocation.setRadius(-1);
                     Intent customSettingsIntent = new Intent(CustomProximityMap.this, LocSettingsActivity.class);
                     customSettingsIntent.putExtra("selectedLocation", selectedLocation);

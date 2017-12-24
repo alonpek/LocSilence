@@ -91,7 +91,7 @@ public class RecursiveSilencePhoneTask extends RetrieveLocation {
                             if (!recentlySilenced) {
                                 Log.i("Silencing", "Activated");
                                 currentlySilencedLocation = location;
-                                modifyPhoneVolume(streamTypes, JsonUtils.volumeLevelsToList(location.getVolumes()));
+                                modifyPhoneVolume(streamTypes, location.getVolumes());
                                 sendNotification("activated", location.getName(), true);
                             }
                             recentlySilenced = true;
@@ -116,7 +116,7 @@ public class RecursiveSilencePhoneTask extends RetrieveLocation {
                             if (!recentlySilenced) {
                                 Log.i("Silencing", "Activated");
                                 currentlySilencedLocation = location;
-                                modifyPhoneVolume(streamTypes, JsonUtils.volumeLevelsToList(location.getVolumes()));
+                                modifyPhoneVolume(streamTypes, location.getVolumes());
                                 sendNotification("activated", location.getName(), true);
                             }
                             recentlySilenced = true;
@@ -226,7 +226,7 @@ public class RecursiveSilencePhoneTask extends RetrieveLocation {
         Log.i("Volume", "Reverted");
         List<Integer> volumeLevels = new ArrayList<>();
         if (currentlySilencedLocation != null) {
-            volumeLevels = JsonUtils.volumeLevelsToList(currentlySilencedLocation.getVolumes());
+            volumeLevels = currentlySilencedLocation.getVolumes();
         }
         for (int i = 0; i < streamTypes.size(); i++) {
             Log.i("Stream Type", Integer.toString(streamTypes.get(i)));

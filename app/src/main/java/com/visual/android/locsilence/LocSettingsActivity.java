@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -43,7 +44,8 @@ public class LocSettingsActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(selectedLocation.getAddress());
         mToolbar.setSubtitle("LocSilence");
-        if (!selectedLocation.getCustomProximity().equals(Constants.JSON_NULL)) {
+        if (!selectedLocation.getCustomProximity().isEmpty()) {
+            Log.i("GSON", "gustom proximity: " + selectedLocation.getCustomProximity());
             mCustomProximity.setChecked(true);
         }
         else if(selectedLocation.getRadius() != -1){
@@ -53,8 +55,7 @@ public class LocSettingsActivity extends AppCompatActivity {
         // Create and set custom adapter of different volume type settings
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         final LocSettingsVolumeAdapter locSettingsVolumeAdapter = new LocSettingsVolumeAdapter(this, volumeTypes,
-                JsonUtils.volumeLevelsToList(selectedLocation.getVolumes()),
-                audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM));
+                selectedLocation.getVolumes(), audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM));
         ListView settingsListView = (ListView) findViewById(R.id.settings_listview);
         settingsListView.setAdapter(locSettingsVolumeAdapter);
 
@@ -92,11 +93,11 @@ public class LocSettingsActivity extends AppCompatActivity {
         mCustomProximity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedLocation.setCustomProximity(new Gson().toJson(null));
+                selectedLocation.setCustomProximity(null);
                 if (mCustomProximity.isChecked()) {
                     mGeneralProximity.setText("");
                     List<Integer> volumeLevels = locSettingsVolumeAdapter.getVolumeLevels();
-                    selectedLocation.setVolumes(new Gson().toJson(volumeLevels));
+                    selectedLocation.setVolumes(volumeLevels);
                     Intent customProxIntent = new Intent(LocSettingsActivity.this, CustomProximityMap.class);
                     customProxIntent.putExtra("selectedLocation", selectedLocation);
                     startActivity(customProxIntent);
@@ -104,7 +105,7 @@ public class LocSettingsActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
                 }
                 else{
-                    selectedLocation.setCustomProximity(Constants.JSON_NULL);
+                    selectedLocation.setCustomProximity(null);
                 }
             }
         });
@@ -113,9 +114,8 @@ public class LocSettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 List<Integer> volumeLevels = locSettingsVolumeAdapter.getVolumeLevels();
-                selectedLocation.setVolumes(new Gson().toJson(volumeLevels));
+                selectedLocation.setVolumes(volumeLevels);
                 if (mCustomProximity.isChecked()) {
-                    // temporary value until we fix the radius/customProx in the recursive task and can set it to -1
                     selectedLocation.setRadius(-1);
                 } else if ((mGeneralProximity.getText().toString()).equals("")) {
                     selectedLocation.setRadius(Constants.DEFAULT_RADIUS);

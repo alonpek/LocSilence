@@ -13,6 +13,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,8 +48,13 @@ public class SQLDatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_RAD = "radius";
     private static final String KEY_CUST_PROX = "custom_proximity";
 
+    private Type typeListInteger;
+    private Type typeListLatLng;
+
     public SQLDatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.typeListInteger = new TypeToken<List<Integer>>() {}.getType();
+        this.typeListLatLng = new TypeToken<ArrayList<LatLng>>() {}.getType();
     }
 
     // Creating Tables
@@ -82,6 +92,7 @@ public class SQLDatabaseHandler extends SQLiteOpenHelper {
     public boolean addLocation(Location location) {
         boolean responseCode = true;
         SQLiteDatabase db = this.getWritableDatabase();
+        Gson gson = new Gson();
 
         ContentValues values = new ContentValues();
         values.put(KEY_ID, location.getId());
@@ -91,10 +102,10 @@ public class SQLDatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_LONG, location.getLng());
         values.put(KEY_CREATED_AT, location.getCreatedAt());
         values.put(KEY_UPDATED_AT, location.getUpdatedAt());
-        values.put(KEY_VOL, location.getVolumes());
+        values.put(KEY_VOL, gson.toJson(location.getVolumes()));
         values.put(KEY_CID, location.getCircleId());
         values.put(KEY_RAD, location.getRadius());
-        values.put(KEY_CUST_PROX, location.getCustomProximity());
+        values.put(KEY_CUST_PROX, gson.toJson(location.getCustomProximity()));
         // Inserting Row
         try {
             db.insertOrThrow(TABLE_LOCATIONS, null, values);
@@ -110,6 +121,7 @@ public class SQLDatabaseHandler extends SQLiteOpenHelper {
     // Getting single contact
     public Location getLocation(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
+        Gson gson = new Gson();
         Cursor cursor = db.query(TABLE_LOCATIONS, new String[]{KEY_ID,
                         KEY_NAME, KEY_ADDRESS, KEY_LAT, KEY_LONG, KEY_CREATED_AT, KEY_UPDATED_AT,
                         KEY_VOL, KEY_CID, KEY_RAD, KEY_CUST_PROX}, KEY_ID + "=?",
@@ -127,10 +139,10 @@ public class SQLDatabaseHandler extends SQLiteOpenHelper {
             location.setLng(cursor.getFloat(4));
             location.setCreatedAt(cursor.getString(5));
             location.setUpdatedAt(cursor.getString(6));
-            location.setVolumes(cursor.getString(7));
+            location.setVolumes((List<Integer>)gson.fromJson(cursor.getString(7), typeListInteger));
             location.setCircleId(cursor.getString(8));
             location.setRadius(cursor.getInt(9));
-            location.setCustomProximity(cursor.getString(10));
+            location.setCustomProximity((List<LatLng>)gson.fromJson(cursor.getString(10), typeListLatLng));
 
             cursor.close();
             return location;
@@ -155,6 +167,7 @@ public class SQLDatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
+        Gson gson = new Gson();
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -167,10 +180,10 @@ public class SQLDatabaseHandler extends SQLiteOpenHelper {
                 location.setLng(cursor.getFloat(4));
                 location.setCreatedAt(cursor.getString(5));
                 location.setUpdatedAt(cursor.getString(6));
-                location.setVolumes(cursor.getString(7));
+                location.setVolumes((List<Integer>)gson.fromJson(cursor.getString(7), typeListInteger));
                 location.setCircleId(cursor.getString(8));
                 location.setRadius(cursor.getInt(9));
-                location.setCustomProximity(cursor.getString(10));
+                location.setCustomProximity((List<LatLng>)gson.fromJson(cursor.getString(10), typeListLatLng));
                 // Adding contact to list
                 allLocations.add(location);
             } while (cursor.moveToNext());
@@ -191,6 +204,7 @@ public class SQLDatabaseHandler extends SQLiteOpenHelper {
     // Updating single contact
     public int updateLocalGame(Location location) {
         SQLiteDatabase db = this.getWritableDatabase();
+        Gson gson = new Gson();
 
         ContentValues values = new ContentValues();
         values.put(KEY_ID, location.getId());
@@ -200,10 +214,10 @@ public class SQLDatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_LONG, location.getLng());
         values.put(KEY_CREATED_AT, location.getCreatedAt());
         values.put(KEY_UPDATED_AT, location.getUpdatedAt());
-        values.put(KEY_VOL, location.getVolumes());
+        values.put(KEY_VOL, gson.toJson(location.getVolumes()));
         values.put(KEY_CID, location.getCircleId());
         values.put(KEY_RAD, location.getRadius());
-        values.put(KEY_CUST_PROX, location.getCustomProximity());
+        values.put(KEY_CUST_PROX, gson.toJson(location.getCustomProximity()));
         // updating row
         return db.update(TABLE_LOCATIONS, values, KEY_ID + "='" + location.getId() + "'", null);
     }

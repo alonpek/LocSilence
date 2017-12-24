@@ -29,8 +29,8 @@ public class Graphics extends AppCompatActivity {
         for (Location location : allLocations) {
             LatLng center = new LatLng(location.getLat(), location.getLng());
             if (location.getRadius() < 1) {
-                Log.e("GSON", "The Gson is the problem");
-                perimDraw(map, JsonUtils.customProxToList(location.getCustomProximity()));
+                if(location.getCustomProximity().isEmpty())
+                perimDraw(map, (ArrayList<LatLng>) location.getCustomProximity());
             } else {
                 CircleOptions opt = new CircleOptions().center(center).radius(location.getRadius())
                         .strokeColor(Color.BLACK).fillColor(0x88FF6800).clickable(true);
@@ -60,7 +60,7 @@ public class Graphics extends AppCompatActivity {
 
 
     public static boolean customInLocation(Location current, LatLng cur) {
-        ArrayList<LatLng> intermediary = JsonUtils.customProxToList(current.getCustomProximity());
+        ArrayList<LatLng> intermediary = (ArrayList<LatLng>) current.getCustomProximity();
         double target = 360;
         double latmax = intermediary.get(0).latitude;
         double lngmax = intermediary.get(0).longitude;

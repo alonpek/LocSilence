@@ -4,9 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.google.gson.Gson;
+import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by RamiK on 10/14/2017.
@@ -21,13 +25,10 @@ public class Location implements Parcelable{
     private double lng;
     private String createdAt;
     private String updatedAt;
-    private String volumes;
-    private int ringtoneVolume;
-    private int notificationsVolume;
-    private int alarmsVolume;
     private String circleId;
     private int radius;
-    private String customProximity;
+    private List<LatLng> customProximity;
+    private List<Integer> volumes;
 
     public Location(){}
 
@@ -40,14 +41,12 @@ public class Location implements Parcelable{
         this.lng = lng;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.volumes = new Gson().toJson(Arrays.asList(0,0,0));
-        this.ringtoneVolume = 0;
-        this.notificationsVolume = 0;
-        this.alarmsVolume = 0;
+        this.volumes = new ArrayList<Integer>(Arrays.asList(0,0,0));
         this.circleId = circleId;
         this.radius = 100;
-        this.customProximity = "null";
+        this.customProximity = new ArrayList<LatLng>();
     }
+
     // default parcel constructor
     public Location(Parcel parcel) {
         this.id = parcel.readString();
@@ -57,13 +56,10 @@ public class Location implements Parcelable{
         this.lng = parcel.readDouble();
         this.createdAt = parcel.readString();
         this.updatedAt = parcel.readString();
-        this.volumes = parcel.readString();
-        this.ringtoneVolume = parcel.readInt();
-        this.notificationsVolume = parcel.readInt();
-        this.alarmsVolume = parcel.readInt();
         this.circleId = parcel.readString();
         this.radius = parcel.readInt();
-        this.customProximity = parcel.readString();
+        this.customProximity = parcel.createTypedArrayList(LatLng.CREATOR);
+        this.volumes = (List<Integer>) parcel.readSerializable();
     }
 
 
@@ -76,13 +72,10 @@ public class Location implements Parcelable{
         parcel.writeDouble(this.lng);
         parcel.writeString(this.createdAt);
         parcel.writeString(this.updatedAt);
-        parcel.writeString(this.volumes);
-        parcel.writeInt(this.ringtoneVolume);
-        parcel.writeInt(this.notificationsVolume);
-        parcel.writeInt(this.alarmsVolume);
         parcel.writeString(this.circleId);
         parcel.writeInt(this.radius);
-        parcel.writeString(this.customProximity);
+        parcel.writeTypedList(this.customProximity);
+        parcel.writeSerializable((Serializable) this.volumes);
     }
 
 
@@ -128,25 +121,13 @@ public class Location implements Parcelable{
         return updatedAt;
     }
 
-    public String getVolumes(){ return  this.volumes; }
-
-    public int getVolRingtone() {
-        return ringtoneVolume;
-    }
-
-    public int getVolNotifications() {
-        return notificationsVolume;
-    }
-
-    public int getVolAlarms() {
-        return alarmsVolume;
-    }
+    public List<Integer> getVolumes(){ return  this.volumes; }
 
     public String getCircleId() { return circleId; }
 
     public int getRadius() { return radius; }
 
-    public String getCustomProximity(){ return customProximity; }
+    public List<LatLng> getCustomProximity(){ return customProximity; }
 
     // SET methods
 
@@ -176,27 +157,19 @@ public class Location implements Parcelable{
         this.updatedAt = updatedAt;
     }
 
-    public void setVolumes(String volumes){ this.volumes = volumes; };
-
-    public void setVolRingtone(int vol_ringtone) { this.ringtoneVolume = vol_ringtone; }
-
-    public void setVolNotifications(int vol_notifications) { this.notificationsVolume = vol_notifications; }
-
-    public void setVolAlarms(int vol_alarms) { this.alarmsVolume = vol_alarms; }
+    public void setVolumes(List<Integer> volumes){ this.volumes = volumes; };
 
     public void setCircleId(String circleId) { this.circleId = circleId; }
 
     public void setRadius(int radius) { this.radius = radius; }
 
-    public void setCustomProximity(String customProximity){ this.customProximity = customProximity; }
+    public void setCustomProximity(List<LatLng> customProximity){ this.customProximity = customProximity; }
 
     public void printLocation(){
         Log.i("logDB", "Location: (name: " + this.getName() + ") | " +
                 "(Address: " + this.getAddress() + ") | " +
                 "(LatLong: " + this.getLat() + ":" + this.getLng() + ") |" +
-                "(ringtoneVolume: " + this.getVolRingtone() + ") |" +
-                "(vol_media: " + this.getVolNotifications() + ") |" +
-                "(alarmsVolume: " + this.getVolAlarms() + ") |" +
+                "(Volumes: " + this.getVolumes().toString() + ") |" +
                 "(ID: " + this.getId() + ") | " + "(Cid: " + this.getCircleId() + ") |" +
                 "(Radius: " + this.getRadius() + ") |" + "(customProx: " + this.getCustomProximity() + ") |"
         );

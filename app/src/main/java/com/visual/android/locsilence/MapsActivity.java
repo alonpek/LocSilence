@@ -186,6 +186,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     new Date().toString(),
                     "");
         }
+        selectedLocation.printLocation();
         return selectedLocation;
     }
 
