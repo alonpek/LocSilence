@@ -5,6 +5,7 @@
     <color name="colorPrimaryLight">#82B1FF</color>
     <color name="colorAccent">#FF9800</color>
     <color name="white">#FFF</color>
+    <color name="defaultWhite">#EEEEEE</color>
     <color name="black">#212121</color>
     <color name="orange">#88FF3800</color>
 </resources>

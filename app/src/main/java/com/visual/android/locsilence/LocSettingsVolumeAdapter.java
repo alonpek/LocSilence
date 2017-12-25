@@ -21,11 +21,11 @@ public class LocSettingsVolumeAdapter extends ArrayAdapter<String> {
     private List<Integer> volumeLevels;
     private int maxVolume;
 
-    public LocSettingsVolumeAdapter(Context context, String[] volumeTypes, List<Integer> defaultVolumes, int maxVolume) {
-        super(context, R.layout.item_loc_settings_volumes, volumeTypes);
-        this.volumeTypes = volumeTypes;
-        this.maxVolume = maxVolume;
+    public LocSettingsVolumeAdapter(Context context, List<Integer> defaultVolumes, int maxVolume) {
+        super(context, R.layout.item_loc_settings_volumes, Constants.volumeTypes);
+        this.volumeTypes = Constants.volumeTypes;
         this.volumeLevels = defaultVolumes;
+        this.maxVolume = maxVolume;
     }
 
 
@@ -36,12 +36,14 @@ public class LocSettingsVolumeAdapter extends ArrayAdapter<String> {
 
         // Init info
         final TextView mVolumeTitle = (TextView) customView.findViewById(R.id.title_volumeType);
-        mVolumeTitle.setText(getItem(position));
         final SeekBar mVolumeSeekBar = (SeekBar) customView.findViewById(R.id.seekBar_volume);
         final CheckBox mDefaultCheckBox = (CheckBox) customView.findViewById(R.id.check_default);
 
-        // Set seekbar to default value
+        // Set up UI
+        mVolumeTitle.setText(getItem(position));
         mVolumeSeekBar.setMax(this.maxVolume);
+
+        // Init volume settings UI
         if (volumeLevels.get(position) >= 0) {
             mVolumeSeekBar.setProgress(volumeLevels.get(position));
         } else {
@@ -56,12 +58,10 @@ public class LocSettingsVolumeAdapter extends ArrayAdapter<String> {
                 volumeLevels.set(position, progress);
                 mDefaultCheckBox.setChecked(false);
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 //TODO: Auto-generated stub
             }
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //TODO: Auto-generated stub
@@ -76,8 +76,8 @@ public class LocSettingsVolumeAdapter extends ArrayAdapter<String> {
                     volumeLevels.set(position, -1);
                     mVolumeSeekBar.setEnabled(false);
                 } else {
-                    mVolumeSeekBar.setEnabled(true);
                     volumeLevels.set(position, mVolumeSeekBar.getProgress());
+                    mVolumeSeekBar.setEnabled(true);
                 }
             }
         });
@@ -88,6 +88,10 @@ public class LocSettingsVolumeAdapter extends ArrayAdapter<String> {
     // returns an array representation of the current volume settings
     public List<Integer> getVolumeLevels() {
         return volumeLevels;
+    }
+
+    public int getSize(){
+        return volumeLevels.size();
     }
 
     @Override

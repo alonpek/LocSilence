@@ -10,4 +10,6 @@ public class Constants {
     final static double DEFAULT_LONG = -122.0841;
     final static int DEFAULT_RADIUS = 100;
     final static String JSON_NULL = "null";
+
+    final static String[] volumeTypes = {"Ringtone", "Notifications", "Alarms"};
 }
