@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -18,21 +17,18 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,7 +185,13 @@ public class LocSettingsActivity extends AppCompatActivity implements OnMapReady
 
         this.selectedLatLng = new LatLng(latitude, longitude);
         mMap.addMarker(new MarkerOptions().position(selectedLatLng).title(selectedLocation.getName()));
-        draw.drawCircle(mMap, new LatLng(selectedLocation.getLat(), selectedLocation.getLng()), Constants.DEFAULT_RADIUS);
+
+        if(selectedLocation.getCustomProximity().isEmpty()) {
+            draw.drawCircle(mMap, new LatLng(selectedLocation.getLat(), selectedLocation.getLng()), selectedLocation.getRadius());
+        }
+        else{
+            draw.perimDraw(mMap, (ArrayList<LatLng>) selectedLocation.getCustomProximity());
+        }
         customizingBoundary = false;
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14.5f));
@@ -207,7 +209,7 @@ public class LocSettingsActivity extends AppCompatActivity implements OnMapReady
                     if (boundary.size() >= 3) {
                         Log.i("TAG", "Drawing new perimeter");
                         mMap.clear();
-                        draw.perimeterDraw(mMap, boundary);
+                        draw.perimeterUpdate(mMap, boundary);
                     }
                     draw.pointDraw(mMap, point);
                 } else {
@@ -225,7 +227,7 @@ public class LocSettingsActivity extends AppCompatActivity implements OnMapReady
                     boundary.remove(boundary.size() - 1);
                     mMap.clear();
                     if (boundary.size() >= 3) {
-                        draw.perimeterDraw(mMap, boundary);
+                        draw.perimeterUpdate(mMap, boundary);
                     } else {
                         boundary.clear();
                         draw.drawCircle(mMap, new LatLng(selectedLocation.getLat(), selectedLocation.getLng()), Constants.DEFAULT_RADIUS);

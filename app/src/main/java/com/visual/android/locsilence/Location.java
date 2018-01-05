@@ -43,7 +43,7 @@ public class Location implements Parcelable{
         this.updatedAt = updatedAt;
         this.volumes = new ArrayList<Integer>(Arrays.asList(0,0,0));
         this.circleId = circleId;
-        this.radius = 100;
+        this.radius = Constants.DEFAULT_RADIUS;
         this.customProximity = new ArrayList<LatLng>();
     }
 

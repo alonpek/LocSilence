@@ -21,7 +21,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
 
@@ -162,7 +162,7 @@ public class CustomProximityMap extends AppCompatActivity implements OnMapReadyC
                     boundary.add(point);
                     Log.i(TAG, "Point added to custom proximity boundary["+(boundary.size()-1)+"]");
                     if(boundary.size() >=3){
-                        draw.perimeterDraw(mMap,boundary);
+                        draw.perimeterUpdate(mMap,boundary);
                     }
                     draw.pointDraw(mMap,point);
                 }
@@ -180,7 +180,7 @@ public class CustomProximityMap extends AppCompatActivity implements OnMapReadyC
                     Log.i(TAG, "Point added to custom proximity boundary["+(boundary.size()-1)+"]");
                     mMap.clear();
                     if(boundary.size() >= 3){
-                        draw.perimeterDraw(mMap,boundary);
+                        draw.perimeterUpdate(mMap,boundary);
                     }
                     else{
                         boundary.clear();

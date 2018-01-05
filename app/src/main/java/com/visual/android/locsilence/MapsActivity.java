@@ -91,7 +91,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(db.getSize()<Constants.MAX_DB_SIZE) {
+                if(db.getSize() < Constants.MAX_DB_SIZE) {
                     addLocationAction();
                 }
                 else{
@@ -243,14 +243,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         // Obtain all locations
         List<Location> locations = db.getAllLocations();
-
-        for (Location Savedlocation : locations) {
-            Log.i("Marker Maker", "Hit");
-            Log.i("Current Lat", Double.toString(Savedlocation.getLat()));
-            Log.i("Current Long", Double.toString(Savedlocation.getLng()));
-            LatLng loc = new LatLng(Savedlocation.getLat(), Savedlocation.getLng());
-            mMap.addMarker(new MarkerOptions().position(loc).title(Savedlocation.getName()));
-        }
 
         Utility.recursiveSilencePhoneTask = new RecursiveSilencePhoneTask(locationManager, db, this);
         Utility.recursiveSilencePhoneTask.execute(locationManager);
