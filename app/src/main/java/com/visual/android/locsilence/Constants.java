@@ -9,6 +9,7 @@ public class Constants {
     final static double DEFAULT_LAT = 37.4220;
     final static double DEFAULT_LONG = -122.0841;
     final static int DEFAULT_RADIUS = 100;
+    final static int MAX_BOUNDARY_POINTS = 8;
     final static String JSON_NULL = "null";
 
     final static String[] volumeTypes = {"Ringtone", "Notifications", "Alarms"};

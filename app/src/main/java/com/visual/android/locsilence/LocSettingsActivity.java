@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -23,10 +24,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
@@ -43,27 +46,33 @@ public class LocSettingsActivity extends AppCompatActivity implements OnMapReady
     private ArrayList<LatLng> boundary = new ArrayList<LatLng>();
     private String[] volumeTypes = {"Ringtone", "Notifications", "Alarms"};
     private Location selectedLocation;
+    private LatLng selectedLatLng;
+    private boolean customizingBoundary;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loc_settings);
+        Log.i(TAG, "LocSettingsActivity created");
 
         // Init info
         final SQLDatabaseHandler db = new SQLDatabaseHandler(this);
         selectedLocation = (Location) getIntent().getParcelableExtra("selectedLocation");
+        final LatLng locCenter = new LatLng(selectedLocation.getLat(), selectedLocation.getLng());
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        LinearLayout volSettingsLayout = (LinearLayout) findViewById(R.id.volumeSettings_layout);
+        final FloatingActionButton mGoToLocFab = (FloatingActionButton) findViewById(R.id.fab_go_to_selectedLoc);
         final Button mSetButton = (Button) findViewById(R.id.set_button);
         final Button mDeleteButton = (Button) findViewById(R.id.delete_button);
-        //final EditText mGeneralProximity = (EditText) findViewById(R.id.genericProxy_editText);
-        //final CheckBox mCustomProximity = (CheckBox) findViewById(R.id.customProx_checkBox);
+        final EditText mRadiusEditText = (EditText) findViewById(R.id.radius_editText);
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        /*SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_customProxy);
         mapFragment.getMapAsync(this);
-*/
+
         // Set basic ui
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(selectedLocation.getAddress());
@@ -72,50 +81,59 @@ public class LocSettingsActivity extends AppCompatActivity implements OnMapReady
         // Create and set custom adapter of different volume type settings
         final LocSettingsVolumeAdapter locSettingsVolumeAdapter = new LocSettingsVolumeAdapter(this,
                 selectedLocation.getVolumes(), audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM));
-        LinearLayout volSettingsListView = (LinearLayout) findViewById(R.id.volumeSettings_listview);
-        LinearLayout vols = new LinearLayout(this);
-        vols.setOrientation(LinearLayout.VERTICAL);
-        for(int pos=0; pos<locSettingsVolumeAdapter.getSize(); pos++){
-            Log.i("halp", "getting view: " + locSettingsVolumeAdapter.getItem(pos));
-            vols.addView(locSettingsVolumeAdapter.getView(pos, null, null));
-        }
-        volSettingsListView.addView(vols, 0);
-/*
+        AdaptorToLinearLayout(volSettingsLayout, locSettingsVolumeAdapter);
+
         // Init Listeners
-        mGeneralProximity.addTextChangedListener(new TextWatcher() {
-            // editingText flag used for preventing infinite recursive loop
-            boolean editingText = false;
+        mRadiusEditText.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                String proximityString = mGeneralProximity.getText().toString();
-                if (!proximityString.equals("") && editingText == false) {
-                    int proximity = Integer.parseInt(proximityString);
-                    editingText = true;
-                    if (proximity > 300) {
-                        mGeneralProximity.setText("");
-                        mGeneralProximity.setHint(" 300 max");
-                    } else if (proximity < 1) {
-                        s.replace(0, s.length(), "1", 0, 1);
+                if (customizingBoundary == false) {
+                    mMap.clear();
+                    if (boundary.isEmpty() == false) {
+                        boundary.clear();
                     }
-                    editingText = false;
+                    if (s.toString().equals("")) {
+                        draw.drawCircle(mMap, locCenter, Constants.DEFAULT_RADIUS);
+                        mMap.addMarker(new MarkerOptions().position(selectedLatLng).title(selectedLocation.getName()));
+                    } else {
+                        draw.drawCircle(mMap, locCenter, Integer.parseInt(s.toString()));
+                        mMap.addMarker(new MarkerOptions().position(selectedLatLng).title(selectedLocation.getName()));
+                    }
                 }
             }
+
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 //TODO: Auto-generated stub
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (mCustomProximity.isChecked()) {
-                    mCustomProximity.setChecked(false);
-                }
+                //TODO: Auto-generated stub
             }
         });
-*/
+
+        mGoToLocFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CameraUpdate mCameraLocation = CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(locCenter.latitude, locCenter.longitude), 14.5f);
+                mMap.animateCamera(mCameraLocation);
+            }
+        });
 
         mSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 List<Integer> volumeLevels = locSettingsVolumeAdapter.getVolumeLevels();
                 selectedLocation.setVolumes(volumeLevels);
+
+                if(boundary.isEmpty() == false){
+                    selectedLocation.setCustomProximity(boundary);
+                }
+                else if ((mRadiusEditText.getText().toString()).equals("")){
+                    selectedLocation.setRadius(Constants.DEFAULT_RADIUS);
+                }
+                else{
+                    selectedLocation.setRadius(Integer.parseInt(mRadiusEditText.getText().toString()));
+                }
 
                 if (db.getLocation(selectedLocation.getId()) == null) {
                     db.addLocation(selectedLocation);
@@ -150,8 +168,9 @@ public class LocSettingsActivity extends AppCompatActivity implements OnMapReady
     // installed Google Play services and returned to the app.
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        this.mMap = googleMap;
         FloatingActionButton fabRevertPoint = (FloatingActionButton) findViewById(R.id.fab_revert_point);
+        final EditText mRadiusEditText = (EditText) findViewById(R.id.radius_editText);
 
         if (checkLocationPermission()) {
             if (ContextCompat.checkSelfPermission(this,
@@ -165,53 +184,56 @@ public class LocSettingsActivity extends AppCompatActivity implements OnMapReady
             }
         }
 
-/*        double latitude;
-        double longitude;
-        if (selectedLocation != null) {
-            latitude = selectedLocation.getLat();
-            longitude = selectedLocation.getLng();
-        } else {
-            latitude = Constants.DEFAULT_LAT;
-            longitude = Constants.DEFAULT_LONG;
-        }
+        double latitude = selectedLocation.getLat();
+        double longitude = selectedLocation.getLng();
 
-        LatLng loc = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(loc).title(selectedLocation.getName()));
+        this.selectedLatLng = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions().position(selectedLatLng).title(selectedLocation.getName()));
+        draw.drawCircle(mMap, new LatLng(selectedLocation.getLat(), selectedLocation.getLng()), Constants.DEFAULT_RADIUS);
+        customizingBoundary = false;
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14.5f));
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng point) {
-                int MAX_POINTS = 8;
-                if(boundary.size() < MAX_POINTS){
-                    boundary.add(point);
-                    Log.i(TAG, "Point added to custom proximity boundary["+(boundary.size()-1)+"]");
-                    if(boundary.size() >=3){
-                        draw.perimeterDraw(mMap,boundary);
-                    }
-                    draw.pointDraw(mMap,point);
+                customizingBoundary = true;
+                mRadiusEditText.setText("");
+                if(boundary.isEmpty()){
+                    mMap.clear();
                 }
-                else{
+                if (boundary.size() < Constants.MAX_BOUNDARY_POINTS) {
+                    boundary.add(point);
+                    Log.i("TAG", "Point added to custom boundary. Boundary size: " + boundary.size());
+                    if (boundary.size() >= 3) {
+                        Log.i("TAG", "Drawing new perimeter");
+                        mMap.clear();
+                        draw.perimeterDraw(mMap, boundary);
+                    }
+                    draw.pointDraw(mMap, point);
+                } else {
                     Utility.alertToast(LocSettingsActivity.this, "Maximum 8 points");
                 }
+                customizingBoundary = false;
             }
         });
 
         fabRevertPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mMap != null) {
-                    boundary.remove(boundary.size()-1);
-                    Log.i(TAG, "Point added to custom proximity boundary["+(boundary.size()-1)+"]");
+                Log.i(TAG, "Point reverted from custom boundary settings. Current boundary points: " + boundary.size());
+                if (mMap != null && boundary.isEmpty() == false) {
+                    boundary.remove(boundary.size() - 1);
                     mMap.clear();
-                    if(boundary.size() >= 3){
-                        draw.perimeterDraw(mMap,boundary);
-                    }
-                    else{
+                    if (boundary.size() >= 3) {
+                        draw.perimeterDraw(mMap, boundary);
+                    } else {
                         boundary.clear();
+                        draw.drawCircle(mMap, new LatLng(selectedLocation.getLat(), selectedLocation.getLng()), Constants.DEFAULT_RADIUS);
+                        mMap.addMarker(new MarkerOptions().position(selectedLatLng).title(selectedLocation.getName()));
                     }
                 }
             }
-        });*/
+        });
     }
 
     public boolean checkLocationPermission() {
@@ -252,5 +274,14 @@ public class LocSettingsActivity extends AppCompatActivity implements OnMapReady
         } else {
             return true;
         }
+    }
+
+    private void AdaptorToLinearLayout(LinearLayout layout, LocSettingsVolumeAdapter adapter) {
+        LinearLayout vols = new LinearLayout(this);
+        vols.setOrientation(LinearLayout.VERTICAL);
+        for (int pos = 0; pos < adapter.getSize(); pos++) {
+            vols.addView(adapter.getView(pos, null, null));
+        }
+        layout.addView(vols, 0);
     }
 }

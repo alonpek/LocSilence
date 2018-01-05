@@ -28,8 +28,7 @@ public class Graphics extends AppCompatActivity {
         //iterates through database and draws the circles
         for (Location location : allLocations) {
             LatLng center = new LatLng(location.getLat(), location.getLng());
-            if (location.getRadius() < 1) {
-                if(location.getCustomProximity().isEmpty())
+            if (location.getCustomProximity().isEmpty() == false) {
                 perimDraw(map, (ArrayList<LatLng>) location.getCustomProximity());
             } else {
                 CircleOptions opt = new CircleOptions().center(center).radius(location.getRadius())
@@ -49,6 +48,13 @@ public class Graphics extends AppCompatActivity {
         }
         return handler;
     }
+
+    public void drawCircle(GoogleMap map, LatLng center, int radius){
+        CircleOptions opt = new CircleOptions().center(center).radius(radius)
+                .strokeColor(Color.BLACK).fillColor(0x88FF6800).clickable(true);
+        Circle circle = map.addCircle(opt);
+    }
+
 
     public static boolean getIfClicked() {
         return setRadius;
